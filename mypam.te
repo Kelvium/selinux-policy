@@ -25,8 +25,4 @@ gen_require(`
 	type unconfined_t;
 ')
 
-allow getty_t local_login_t:process { noatsecure rlimitinh siginh };
-allow local_login_t chkpwd_t:process { noatsecure rlimitinh siginh };
 allow local_login_t unconfined_t:process { noatsecure rlimitinh siginh };
-
-# I'm not sure about chkpwd_t because I don't know what this is. No one cares, right? Then it will be here FOREVER.
