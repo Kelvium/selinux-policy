@@ -1,0 +1,15 @@
+policy_module(mymisc, 1.0)
+
+gen_require(`
+	type unconfined_t;
+	type gcc_config_t;
+
+	type cert_t;
+	type lib_t;
+')
+
+allow unconfined_t self:user_namespace create;
+
+allow gcc_config_t cert_t:file { open read };
+allow gcc_config_t lib_t:file execute_no_trans;
+allow gcc_config_t self:capability dac_read_search;

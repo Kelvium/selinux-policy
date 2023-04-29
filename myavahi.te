@@ -1,0 +1,11 @@
+policy_module(myavahi, 1.0)
+
+gen_require(`
+	type avahi_t;
+
+	type unconfined_t;
+
+	class dbus { send_msg };
+')
+
+allow avahi_t unconfined_t:dbus send_msg;

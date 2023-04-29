@@ -1,0 +1,13 @@
+policy_module(myalsa, 1.0)
+
+gen_require(`
+	type alsa_t;
+
+	type init_t;
+	type default_t;
+	type device_t;
+')
+
+allow alsa_t init_t:fd use;
+allow alsa_t default_t:dir search;
+allow alsa_t device_t:chr_file { open read write ioctl };

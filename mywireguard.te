@@ -1,0 +1,17 @@
+policy_module(mywireguard, 1.0)
+
+gen_require(`
+	type wireguard_t;
+
+	type net_conf_t;
+	type node_t;
+	type resolvconf_conf_t;
+	type resolvconf_exec_t;
+	type wireguard_runtime_t;
+')
+
+allow wireguard_t net_conf_t:file { getattr ioctl open read unlink };
+allow wireguard_t node_t:udp_socket node_bind;
+allow wireguard_t resolvconf_conf_t:file { getattr open read };
+allow wireguard_t resolvconf_exec_t:file { execute execute_no_trans getattr ioctl open read };
+allow wireguard_t wireguard_runtime_t:dir { create rmdir };

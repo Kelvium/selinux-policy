@@ -1,0 +1,31 @@
+policy_module(myboot, 1.0)
+
+gen_require(`
+	type tmpfiles_t;
+	type fsadm_t;
+	type tmpfiles_t;
+	type systemd_tmpfiles_t;
+	type hwclock_t;
+	type run_init_t;
+
+	type init_t;
+	type default_t;
+	type sysctl_kernel_t;
+	type proc_t;
+	type device_t;
+	type user_tmp_t;
+')
+
+allow tmpfiles_t sysctl_kernel_t:dir search;
+allow tmpfiles_t sysctl_kernel_t:file { open read };
+
+allow fsadm_t default_t:file { read write open getattr };
+
+allow systemd_tmpfiles_t self:capability sys_resource;
+allow systemd_tmpfiles_t self:process setrlimit;
+
+allow hwclock_t proc_t:filesystem getattr;
+
+allow run_init_t init_t:dir search;
+allow run_init_t proc_t:filesystem getattr;
+allow run_init_t user_tmp_t:file read;
