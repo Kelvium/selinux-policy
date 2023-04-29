@@ -4,6 +4,7 @@ POLICIES    := \
 	       myavahi.pp \
 	       myboot.pp \
 	       mymisc.pp \
+	       mypam.pp \
 	       myportage.pp \
 	       mywireguard.pp
 

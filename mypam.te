@@ -1,0 +1,32 @@
+# This particular policy is required because I want to set custom limits in the /etc/security/limits.conf file (and /etc/security/limits.d, mostly filled by Portage packages).
+# I found out that in permissive mode every rule works. But when enforcing, PAM with 'session require pam_limits.so debug' config prints in the debug log that it sets the limits,
+# but it actually does not! But nothing was denied in the audit log (/var/log/audit/audit.log)! I had to run 'semodule -DB' to remove all dontaudit`s from the SELinux policy-ring
+# (or how do they call it?). Then it began to actually print the so-valuable AVC denies in the audit log.
+# Gentoo bugtracker has a similar bug reported, which helped me with the 'semodule -DB' part. It is from 2018 and still is unresolved. But it is about crond, not PAM limits.
+# #662738
+
+# Actually, a lot of processes try to use the { noatsecure rlimitinh siginh } (next - the stuff) privileges. So, probably (meh), it makes sense that this is marked dontaudit.
+# BUT THIS DOES NOT JUSTIFY THE LOSS OF MY 2.5 BRAIN CELLS!!!
+
+# I only allow the stuff for local_login_t and getty_t because I only want my shell to initially have the configured limits. Child processes should inherit them. I hope so... P.S.: (they do!)
+# (and also for unconfined_t to allow the freedomware to live freely xD)
+# Of course, you can modify the policy as you want.
+
+# This comment was written because I want people not to fuck their brains out while trying SELinux the first time (like me).
+# This is stupid af.
+
+policy_module(mypam, 1.0)
+
+gen_require(`
+	type getty_t;
+	type local_login_t;
+
+	type chkpwd_t;
+	type unconfined_t;
+')
+
+allow getty_t local_login_t:process { noatsecure rlimitinh siginh };
+allow local_login_t chkpwd_t:process { noatsecure rlimitinh siginh };
+allow local_login_t unconfined_t:process { noatsecure rlimitinh siginh };
+
+# I'm not sure about chkpwd_t because I don't know what this is. No one cares, right? Then it will be here FOREVER.
